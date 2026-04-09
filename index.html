@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dessert Highway Billboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Oswald:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Montserrat', sans-serif;
+      color: #f4f1e8;
+      background:
+        radial-gradient(ellipse at 14% 18%, rgba(255,255,255,0.25) 0%, transparent 45%),
+        radial-gradient(ellipse at 78% 24%, rgba(255,255,255,0.15) 0%, transparent 40%),
+        linear-gradient(180deg, #19466f 0%, #0f2a45 55%, #0b1f35 100%);
+      padding: 20px 14px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+    }
+
+    .stage {
+      width: 100%;
+      max-width: 1020px;
+      position: relative;
+      padding-top: 12px;
+    }
+
+    .ground {
+      position: absolute;
+      left: -4%;
+      right: -4%;
+      bottom: -20px;
+      height: 150px;
+      border-radius: 24px;
+      z-index: 0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 42%, rgba(0,0,0,0.45) 100%),
+        linear-gradient(180deg, #2f2f2f 0%, #1f1f1f 100%);
+    }
+
+    .supports {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 58px;
+      height: 300px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .pole {
+      position: absolute;
+      bottom: 0;
+      width: 22px;
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #2f2f2f 0%, #787878 45%, #2f2f2f 100%);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .pole.left { left: 19%; }
+    .pole.right { right: 19%; }
+
+    .crossbar {
+      position: absolute;
+      left: 16%;
+      right: 16%;
+      bottom: 232px;
+      height: 16px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #7c7c7c 0%, #3f3f3f 100%);
+    }
+
+    .lights {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 4;
+      pointer-events: none;
+      height: 54px;
+    }
+
+    .light {
+      position: absolute;
+      top: 8px;
+      width: 44px;
+      height: 18px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #2c2c2c 0%, #101010 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    .light::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 14px;
+      width: 260px;
+      height: 190px;
+      background: radial-gradient(ellipse at top, rgba(255,249,222,0.32) 0%, rgba(255,249,222,0.09) 38%, transparent 74%);
+    }
+    .light.l1 { left: 15%; }
+    .light.l2 { left: 50%; transform: translateX(-50%); }
+    .light.l3 { right: 15%; }
+
+    .billboard {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      min-height: 330px;
+      aspect-ratio: 18 / 8;
+      border-radius: 16px;
+      border: 12px solid #2d2824;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 18% 20%, rgba(255,255,255,0.72) 0%, transparent 52%),
+        linear-gradient(165deg, #f4efd9 0%, #ebdfb9 52%, #dfce9f 100%);
+      box-shadow:
+        0 18px 36px rgba(0,0,0,0.42),
+        inset 0 0 0 3px rgba(255,255,255,0.2),
+        inset 0 0 0 10px rgba(60,45,35,0.08);
+    }
+
+    .catwalk {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: -16px;
+      height: 30px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #3c3c3c 0%, #1f1f1f 100%);
+      z-index: 2;
+      box-shadow: 0 12px 20px rgba(0,0,0,0.3);
+    }
+    .catwalk::before {
+      content: "";
+      position: absolute;
+      inset: 7px 10px;
+      border-radius: 8px;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.12) 0px,
+        rgba(255,255,255,0.12) 6px,
+        rgba(255,255,255,0.03) 6px,
+        rgba(255,255,255,0.03) 14px
+      );
+    }
+
+    .board-content {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 24px 26px 28px;
+      align-items: center;
+    }
+
+    .left-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      color: #3d2c1f;
+    }
+
+    .tag {
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-size: clamp(0.7rem, 1.6vw, 0.95rem);
+      color: #6f5e4d;
+    }
+
+    .headline {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 0.95;
+      font-size: clamp(2.4rem, 6.2vw, 4.8rem);
+    }
+
+    .flavor-pill {
+      width: fit-content;
+      background: linear-gradient(180deg, #f5e6a8 0%, #e8d788 100%);
+      border: 1px solid rgba(150,120,60,0.45);
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.08em;
+      font-size: clamp(0.64rem, 1.4vw, 0.86rem);
+      color: #3f7c93;
+    }
+
+    .price {
+      width: fit-content;
+      margin-top: 6px;
+      background: linear-gradient(145deg, #e17e76 0%, #ca5e57 100%);
+      border: 2px solid #f7d3c8;
+      border-radius: 999px;
+      color: #fff7f1;
+      font-family: Georgia, serif;
+      font-style: italic;
+      padding: 7px 14px;
+      box-shadow: 0 0 0 2px #a84a43;
+    }
+
+    .clipart-zone {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+    }
+
+    .burst {
+      position: absolute;
+      width: 95%;
+      max-width: 330px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      opacity: 0.58;
+      background: repeating-conic-gradient(
+        from 0deg,
+        rgba(255,255,255,0.95) 0deg 10deg,
+        rgba(255,255,255,0.16) 10deg 20deg
+      );
+    }
+
+    #dessertClipart {
+      width: 72%;
+      max-width: 280px;
+      aspect-ratio: 1;
+      object-fit: contain;
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(8px 14px 14px rgba(0,0,0,0.2));
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    #dessertClipart.loading {
+      opacity: 0.5;
+      transform: scale(0.96);
+    }
+
+    .panel {
+      width: 100%;
+      max-width: 920px;
+      background: rgba(28,24,19,0.6);
+      border: 1px solid rgba(220,200,170,0.22);
+      border-radius: 12px;
+      padding: 16px 18px 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    .panel h2 {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 0.86rem;
+      margin-bottom: 10px;
+      color: #d3c6b4;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    #dessertInput {
+      flex: 1;
+      min-width: 210px;
+      border: 2px solid #7aa08e;
+      border-radius: 8px;
+      background: rgba(16,14,11,0.92);
+      color: #f3efe8;
+      font-size: 1rem;
+      padding: 11px 12px;
+      outline: none;
+    }
+    #dessertInput:focus {
+      border-color: #e88e84;
+      box-shadow: 0 0 0 3px rgba(232,142,132,0.25);
+    }
+
+    #updateBtn {
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #e8958a 0%, #c85e55 100%);
+      color: #fff7f1;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.94rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 11px 20px;
+      cursor: pointer;
+    }
+
+    .quick {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .quick span {
+      font-size: 0.74rem;
+      color: #9e8f7d;
+      margin-right: 2px;
+    }
+    .quick button {
+      border: 1px solid rgba(148,180,164,0.44);
+      border-radius: 999px;
+      background: transparent;
+      color: #bdd1c8;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 640px) {
+      .board-content { grid-template-columns: 1fr; }
+      .clipart-zone { min-height: 190px; }
+      .supports { height: 240px; bottom: 42px; }
+      .crossbar { bottom: 184px; left: 12%; right: 12%; }
+      .pole.left { left: 14%; }
+      .pole.right { right: 14%; }
+      .light::after { width: 210px; height: 170px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="supports" aria-hidden="true">
+      <div class="pole left"></div>
+      <div class="pole right"></div>
+      <div class="crossbar"></div>
+    </div>
+
+    <div class="lights" aria-hidden="true">
+      <div class="light l1"></div>
+      <div class="light l2"></div>
+      <div class="light l3"></div>
+    </div>
+
+    <section class="billboard" aria-label="Dessert highway billboard">
+      <div class="board-content">
+        <div class="left-copy">
+          <div class="tag">Highway Special</div>
+          <h1 class="headline">Dessert Stop</h1>
+          <div class="flavor-pill" id="flavorLine">STRAWBERRY CAKE</div>
+          <div class="price">from <strong>$2</strong></div>
+        </div>
+
+        <div class="clipart-zone">
+          <div class="burst" aria-hidden="true"></div>
+          <img id="dessertClipart" alt="Dessert clipart" />
+        </div>
+      </div>
+      <div class="catwalk" aria-hidden="true"></div>
+    </section>
+
+    <div class="ground" aria-hidden="true"></div>
+  </div>
+
+  <section class="panel">
+    <h2>Type a dessert to change the billboard clipart</h2>
+    <div class="row">
+      <input id="dessertInput" type="text" placeholder="e.g. donut, cupcake, pie, ice cream..." maxlength="60" />
+      <button id="updateBtn" type="button">Update billboard</button>
+    </div>
+    <div class="quick">
+      <span>Quick picks:</span>
+      <button type="button" data-q="cake">Cake</button>
+      <button type="button" data-q="cupcake">Cupcake</button>
+      <button type="button" data-q="donut">Donut</button>
+      <button type="button" data-q="ice cream">Ice cream</button>
+      <button type="button" data-q="pie">Pie</button>
+      <button type="button" data-q="cookie">Cookie</button>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const dessertInput = document.getElementById('dessertInput');
+      const updateBtn = document.getElementById('updateBtn');
+      const flavorLine = document.getElementById('flavorLine');
+      const dessertClipart = document.getElementById('dessertClipart');
+
+      const CLIPART = {
+        cake: {
+          label: 'STRAWBERRY CAKE',
+          svg: `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360">
+              <ellipse cx="180" cy="314" rx="120" ry="24" fill="#c8bba5"/>
+              <rect x="70" y="168" width="220" height="118" rx="16" fill="#f6d8a4" stroke="#a9754c" stroke-width="8"/>
+              <rect x="70" y="214" width="220" height="20" fill="#fff4dc" opacity=".85"/>
+              <path d="M62 170h236c-5-45-33-78-118-78s-111 31-118 78z" fill="#f07f93" stroke="#a74b63" stroke-width="8"/>
+              <circle cx="193" cy="100" r="28" fill="#fff8ec" stroke="#9a6c4a" stroke-width="8"/>
+              <path d="M193 70c9 8 14 17 14 27 0 9-6 16-14 20-8-4-14-11-14-20 0-10 5-19 14-27z" fill="#fff"/>
+            </svg>
+          `
+        },
+        cupcake: {
+          label: 'VANILLA CUPCAKE',
+          svg: `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360">
+              <ellipse cx="180" cy="316" rx="110" ry="22" fill="#c8bba5"/>
+              <path d="M104 170h152l-18 120H122z" fill="#e8b575" stroke="#99653f" stroke-width="8"/>
+              <path d="M95 176h170M88 202h184M82 228h196" stroke="#c89058" stroke-width="6"/>
+              <path d="M102 162c8-50 40-82 78-82 38 0 70 32 78 82z" fill="#f7efe3" stroke="#9f7d5c" stroke-width="8"/>
+              <path d="M130 126c0-24 20-44 44-44 24 0 44 20 44 44" fill="none" stroke="#f7efe3" stroke-width="20"/>
+              <circle cx="226" cy="114" r="12" fill="#ea5f72"/>
+            </svg>
+          `
+        },
+        donut: {
+          label: 'GLAZED DONUT',
+          svg: `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360">
+              <ellipse cx="180" cy="318" rx="118" ry="24" fill="#c8bba5"/>
+              <circle cx="180" cy="190" r="102" fill="#f2b26f" stroke="#a66a3f" stroke-width="10"/>
+              <circle cx="180" cy="190" r="42" fill="#f4efd9" stroke="#a66a3f" stroke-width="10"/>
+              <path d="M80 190a100 100 0 0 1 200 0" fill="none" stroke="#f4819f" stroke-width="28" stroke-linecap="round"/>
+              <path d="M95 155c20 16 30 11 47-5M210 138c13 15 30 13 45 1M110 228c12-14 28-17 43-8" stroke="#f9de6b" stroke-width="6" stroke-linecap="round"/>
+            </svg>
+          `
+        },
+        pie: {
+          label: 'APPLE PIE',
+          svg: `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360">
+              <ellipse cx="180" cy="316" rx="114" ry="22" fill="#c8bba5"/>
+              <path d="M92 232h176l-20 58H112z" fill="#deae70" stroke="#93613b" stroke-width="8"/>
+              <path d="M88 232c26-62 70-98 92-98 23 0 66 36 92 98z" fill="#f0ca86" stroke="#93613b" stroke-width="8"/>
+              <path d="M116 196h128M100 214h160M136 178h88" stroke="#bd8a52" stroke-width="6" stroke-linecap="round"/>
+            </svg>
+          `
+        },
+        cookie: {
+          label: 'CHOCOLATE CHIP COOKIE',
+          svg: `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360">
+              <ellipse cx="180" cy="316" rx="112" ry="22" fill="#c8bba5"/>
+              <circle cx="180" cy="188" r="104" fill="#d8a465" stroke="#926039" stroke-width="10"/>
+              <circle cx="132" cy="160" r="12" fill="#7a4a2a"/>
+              <circle cx="214" cy="144" r="13" fill="#7a4a2a"/>
+              <circle cx="234" cy="222" r="11" fill="#7a4a2a"/>
+              <circle cx="148" cy="226" r="10" fill="#7a4a2a"/>
+              <circle cx="188" cy="192" r="9" fill="#7a4a2a"/>
+            </svg>
+          `
+        },
+        icecream: {
+          label: 'VANILLA ICE CREAM',
+          svg: `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360">
+              <ellipse cx="180" cy="320" rx="112" ry="20" fill="#c8bba5"/>
+              <path d="M180 286L128 186h104z" fill="#d79e57" stroke="#8f6138" stroke-width="8"/>
+              <path d="M136 186h88M146 206h68M156 226h48" stroke="#b37c44" stroke-width="5"/>
+              <circle cx="180" cy="144" r="54" fill="#f7f0df" stroke="#9f7f5a" stroke-width="8"/>
+              <circle cx="142" cy="150" r="12" fill="#f7f0df" stroke="#9f7f5a" stroke-width="6"/>
+              <circle cx="220" cy="150" r="12" fill="#f7f0df" stroke="#9f7f5a" stroke-width="6"/>
+              <circle cx="210" cy="102" r="10" fill="#ea5f72"/>
+            </svg>
+          `
+        },
+        generic: {
+          label: 'SWEET DESSERT',
+          svg: `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360">
+              <ellipse cx="180" cy="316" rx="112" ry="22" fill="#c8bba5"/>
+              <path d="M96 234h168l-16 56H112z" fill="#e5b374" stroke="#976741" stroke-width="8"/>
+              <path d="M100 236c20-56 54-90 80-90s60 34 80 90z" fill="#f2d59e" stroke="#976741" stroke-width="8"/>
+              <circle cx="154" cy="168" r="12" fill="#ea5f72"/>
+              <circle cx="205" cy="178" r="10" fill="#7fc9aa"/>
+            </svg>
+          `
+        }
+      };
+
+      function toDataUri(svg) {
+        return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg.trim());
+      }
+
+      function flavorFromInput(value) {
+        const clean = value.toUpperCase().replace(/[^A-Z0-9\\s]/g, ' ').trim();
+        if (!clean) return 'SWEET DESSERT';
+        const words = clean.split(/\\s+/).filter(Boolean);
+        if (words.length === 1) return words[0];
+        if (words.length === 2) return words[0] + ' ' + words[1];
+        return words.slice(0, 3).join(' ');
+      }
+
+      function keyForDessert(value) {
+        const q = value.toLowerCase().trim();
+        if (!q) return 'cake';
+        if (q.includes('cupcake') || q.includes('muffin')) return 'cupcake';
+        if (q.includes('donut') || q.includes('doughnut')) return 'donut';
+        if (q.includes('ice cream') || q.includes('gelato') || q.includes('sundae')) return 'icecream';
+        if (q.includes('pie') || q.includes('tart')) return 'pie';
+        if (q.includes('cookie') || q.includes('biscuit')) return 'cookie';
+        if (q.includes('cake') || q.includes('cheesecake')) return 'cake';
+        return 'generic';
+      }
+
+      function applyDessert(inputValue) {
+        const key = keyForDessert(inputValue);
+        const entry = CLIPART[key] || CLIPART.generic;
+        const label = inputValue.trim() ? flavorFromInput(inputValue) : entry.label;
+        flavorLine.textContent = label;
+        dessertClipart.classList.add('loading');
+        dessertClipart.onload = function () {
+          dessertClipart.classList.remove('loading');
+        };
+        dessertClipart.src = toDataUri(entry.svg);
+        dessertClipart.alt = label + ' clipart';
+      }
+
+      updateBtn.addEventListener('click', function () {
+        applyDessert(dessertInput.value);
+      });
+
+      dessertInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') applyDessert(dessertInput.value);
+      });
+
+      document.querySelectorAll('.quick button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          dessertInput.value = btn.dataset.q || '';
+          applyDessert(dessertInput.value);
+        });
+      });
+
+      applyDessert('cake');
+    })();
+  </script>
+</body>
+</html>
